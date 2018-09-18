@@ -2,12 +2,50 @@
   "pages": [
     "pages/index/main",
     "pages/logs/main",
-    "pages/counter/main"
+    "pages/counter/main",
+    "pages/setting/main",
+    "pages/shouldPay/main",
+    "pages/workPlace/main",
+    "pages/newPlace/main",
+    "pages/remarkTime/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
+    "navigationBarTitleText": "工友汇",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#bfbfbf",
+    "selectedColor": "#1296db",
+    "backgroundColor": "#fff",
+    "borderStyle": "#bfbfbf",
+    "list": [
+      {
+        "pagePath": "pages/index/main",
+        "iconPath": "static/images/home.png",
+        "selectedIconPath": "static/images/home-active.png",
+        "color":"white",
+        "text": "日历"
+      },
+      {
+        "pagePath": "pages/shouldPay/main",
+        "iconPath": "static/images/pay.png",
+        "selectedIconPath": "static/images/pay-active.png",
+        "text": "应收"
+      },
+      {
+        "pagePath": "pages/workPlace/main",
+        "iconPath": "static/images/workPlace.png",
+        "selectedIconPath": "static/images/workPlace-active.png",
+        "text": "工地"
+      },
+      {
+        "pagePath": "pages/setting/main",
+        "iconPath": "static/images/setting.png",
+        "selectedIconPath": "static/images/setting-active.png",
+        "text": "设置"
+      }
+    ]
   }
 }

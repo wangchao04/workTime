@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "工地",
+  "usingComponents": {
+    "i-button": "../../../static/iview/button/index",
+    "i-tab-bar": "../../../static/iview/tab-bar/index",
+    "i-tab-bar-item": "../../../static/iview/tab-bar-item/index",
+    "i-input-number": "../../../static/iview/input-number/index",
+    "i-radio-group": "../../../static/iview/radio-group/index",
+    "i-radio": "../../../static/iview/radio/index"
+  }
+}
