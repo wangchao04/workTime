@@ -5,6 +5,8 @@
     "i-tab-bar": "../../../static/iview/tab-bar/index",
     "i-tab-bar-item": "../../../static/iview/tab-bar-item/index",
     "i-swipeout": "../../../static/iview/swipeout/index",
-    "i-modal": "../../../static/iview/modal/index"
+    "i-modal": "../../../static/iview/modal/index",
+    "i-panel": "../../../static/iview/panel/index",
+    "i-input": "../../../static/iview/input/index"
   }
 }

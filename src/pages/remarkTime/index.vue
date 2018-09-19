@@ -1,28 +1,39 @@
 <template>
   <div>
     <div>
-      <span>当前工地:111</span>
-      <span>每天工资:2222</span>
+      <i-panel>
+        <i-input value="111" title="当前工地:" :disabled="true" />
+      </i-panel>
+      <i-panel>
+        <i-input value="111" title="每天工资:" :disabled="true" />
+      </i-panel>
     </div>
     <p>
-      <picker mode="date" :value="selectDay" @change="bindDateChange">
-        <span> 请选择日期: {{selectDay}}</span>
-      </picker>
+      <i-panel>
+        <picker mode="date" :value="selectDay" @change="bindDateChange">
+          <i-input :value="selectDay" :disabled="true" placeholder="请选择进场日期" />
+        </picker>
+      </i-panel>
     </p>
     <p>
-      <span>工作时长:</span>
-      <i-input-number :value="workTime" min="0" max="24" step="0.5" @change="workTimeChange" />
+      <i-panel>
+        <i-input :value="workTime" type="digit" placeholder="请填写工作时长" @change="workTimeChange"/>
+      </i-panel>
+
     </p>
     <p>
-      <span>工作天数:</span>
-      <i-radio-group :current="workDay" @change="handleFruitChange">
-        <i-radio position="left" value="1天">
-        </i-radio>
-        <i-radio position="left" value="0.5天">
-        </i-radio>
-      </i-radio-group>
+      <i-panel title="工作天数:">
+        <i-radio-group :current="workDay" @change="handleFruitChange">
+          <i-radio position="left" value="1天">
+          </i-radio>
+          <i-radio position="left" value="0.5天">
+          </i-radio>
+        </i-radio-group>
+      </i-panel>
     </p>
-    <i-button type="primary">保存</i-button>
+    <div class="bottom-btn">
+          <i-button type="primary">保存</i-button>
+    </div>
     <!-- <VueTabBar></VueTabBar> -->
   </div>
 </template>
@@ -33,9 +44,9 @@
   export default {
     data() {
       return {
-        selectDay: '2016-09-01',
-        workTime: 0,
-        workDay:''
+        selectDay: '',
+        workTime: '',
+        workDay: ''
       }
     },
 
@@ -50,8 +61,8 @@
       workTimeChange(data) {
         this.workTime = data.target.value
       },
-      handleFruitChange(data){
-        console.log(1,data)
+      handleFruitChange(data) {
+        console.log(1, data)
         this.workDay = data.target.value
       }
     },
@@ -63,5 +74,9 @@
 </script>
 
 <style lang="stylus" scoped>
-
+.bottom-btn{
+    position absolute
+    bottom 0
+    width 100%
+  }
 </style>
