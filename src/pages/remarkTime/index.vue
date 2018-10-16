@@ -11,25 +11,25 @@
     <p>
       <i-panel>
         <picker mode="date" :value="selectDay" @change="bindDateChange">
-          <i-input :value="selectDay" :disabled="true" placeholder="请选择进场日期" />
+          <input :value="selectDay" :disabled="true" placeholder="请选择进场日期" />
         </picker>
       </i-panel>
     </p>
     <p>
       <i-panel>
-        <i-input :value="workTime" type="digit" placeholder="请填写工作时长" @change="workTimeChange"/>
+        <input v-model="workTime" type="digit" placeholder="请填写工作时长"/>
       </i-panel>
 
     </p>
     <p>
       <i-panel title="工作天数:">
-        <i-radio-group :current="workDay" @change="handleFruitChange">
-          <i-radio position="left" value="1天">
-          </i-radio>
-          <i-radio position="left" value="0.5天">
-          </i-radio>
-        </i-radio-group>
+        <radio-group class="radio-group" @change="handleFruitChange">
+          <label class="radio" v-for="(item, index) in radioArray" :key="item.code">
+            <radio :value="item.code"/> {{item.name}}
+          </label>
+        </radio-group>
       </i-panel>
+
     </p>
     <div class="bottom-btn">
           <i-button type="primary">保存</i-button>
@@ -46,7 +46,15 @@
       return {
         selectDay: '',
         workTime: '',
-        workDay: ''
+        workDay: '',
+        radioArray:[{
+          code:1,
+          name:'1天'
+        },
+        {
+          code:2,
+          name:'0.5天'
+        }]
       }
     },
 
@@ -57,9 +65,6 @@
     methods: {
       bindDateChange(data) {
         this.selectDay = data.target.value
-      },
-      workTimeChange(data) {
-        this.workTime = data.target.value
       },
       handleFruitChange(data) {
         console.log(1, data)

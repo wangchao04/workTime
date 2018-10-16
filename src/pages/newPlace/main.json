@@ -5,8 +5,6 @@
     "i-tab-bar": "../../../static/iview/tab-bar/index",
     "i-tab-bar-item": "../../../static/iview/tab-bar-item/index",
     "i-panel": "../../../static/iview/panel/index",
-    "i-input": "../../../static/iview/input/index",
-    "i-radio-group": "../../../static/iview/radio-group/index",
-    "i-radio": "../../../static/iview/radio/index"
+    "i-message": "../../../static/iview/message/index"
   }
 }

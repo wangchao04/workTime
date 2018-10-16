@@ -9,6 +9,7 @@
         <i-cell title="绑定手机" is-link url="/pages/dashboard/index"></i-cell>
         <i-cell title="使用帮助" is-link url="/pages/dashboard/index"></i-cell>
       </i-cell-group>
+      
     </div>
     <!-- <VueTabBar></VueTabBar> -->
   </div>

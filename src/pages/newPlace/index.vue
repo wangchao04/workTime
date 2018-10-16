@@ -1,136 +1,164 @@
 <template>
   <div>
-    <div v-if="isFromAdd">
-      <i-panel>
-        <i-input :value="wprkPlace"  placeholder="请填写工作地点" @change="wprkPlaceChange"/>
+    <div>
+      <i-panel title="工作地点:">
+        <input v-model="placeData.address" :disabled="!(isFromAdd || placeData.status == 1)" />
       </i-panel>
-      <i-panel>
-        <i-input :value="fee" type="digit" placeholder="请输入金额" @change="feeChange"/>
+      <i-panel title="金额:">
+        <input v-model="placeData.fee" type="digit" :disabled="!(isFromAdd || placeData.status == 1)" />
       </i-panel>
-      <i-panel>
-        <i-input :value="inturducer" placeholder="请填写介绍人" @change="inturducerChange"/>
+      <i-panel title="介绍人:">
+        <input v-model="placeData.introducer" :disabled="!(isFromAdd || placeData.status == 1)" />
       </i-panel>
-      <i-panel>
-        <picker mode="selector" range-key="name" :range="workerArray" :value="selectWorker" @change="bindWorkerChange">
-          <i-input :disabled="true" :value="workerArray[selectWorker] ? workerArray[selectWorker].name :''" placeholder="请选择工种" />
+      <i-panel title="备注:">
+        <input v-model="placeData.remark" :disabled="!(isFromAdd || placeData.status == 1)" />
+      </i-panel>
+      <i-panel title="工种:">
+        <picker v-if="isFromAdd || placeData.status == 1" mode="selector" range-key="name" :range="workerArray" :value="placeData.workType"
+          @change="bindWorkerChange">
+          <input :disabled="true" :value="workerArray[placeData.workType] ? workerArray[placeData.workType].name : ''" />
         </picker>
+        <input v-else v-model="placeData.workTypeName" :disabled="true">
       </i-panel>
-      <i-panel>
-        <picker mode="date" :value="selectDay" @change="bindDateChange">
-          <i-input :disabled="true" :value="selectDay" placeholder="请选择进场日期" />
+      <i-panel title="进场日期:">
+        <picker v-if="isFromAdd || placeData.status == 1" mode="date" :value="placeData.beginDate" @change="bindDateChange">
+          <input :disabled="true" v-model="placeData.beginDate" />
         </picker>
+        <input v-else v-model="placeData.beginDate" :disabled="true">
       </i-panel>
       <i-panel title="计时制:">
-        <i-radio-group :current="timeWay" @change="timeWayChange">
-          <i-radio position="left" value="天制">
-          </i-radio>
-          <i-radio position="left" value="小时制">
-          </i-radio>
-        </i-radio-group>
+        <radio-group v-if="isFromAdd || placeData.status == 1" class="radio-group" @change="timeWayChange">
+          <label class="radio" v-for="(item, index) in radioArray" :key="item.code">
+            <radio :value="item.code" :checked="placeData.payrollSystem == item.code" /> {{item.name}}
+          </label>
+        </radio-group>
+        <input v-else v-model="placeData.payrollSystemName" :disabled="true">
       </i-panel>
     </div>
-    <div v-if="!isFromAdd">
-       <i-panel>
-         <i-input value="111" title="工作地点:" :disabled="true"/>
-      </i-panel>
-      <i-panel>
-       <i-input value="111" title="金额:" :disabled="true"/>
-      </i-panel>
-      <i-panel>
-        <i-input value="111" title="介绍人:" :disabled="true"/>
-      </i-panel>
-      <i-panel>
-        <i-input value="111" title="工种:" :disabled="true"/>
-      </i-panel>
-      <i-panel>
-        <i-input value="111" title="进场日期:" :disabled="true"/>
-      </i-panel>
-      <i-panel>
-        <i-input value="111" title="计时制:" :disabled="true"/>
-      </i-panel>
+    <div class="bottom-btn" v-if="isFromAdd || placeData.status == 1">
+      <i-button @click="newPlace()" type="primary">保存</i-button>
     </div>
-    <div class="bottom-btn" v-if="isFromAdd">
-         <i-button  type="primary">保存</i-button>
-    </div>
-    <!-- <VueTabBar></VueTabBar> -->
+    <i-message id="message" />
   </div>
 </template>
 
 <script>
-  import VueTabBar from '../../components/tabBar/tabBar.vue'
-
+  const {
+    $Message
+  } = require('../../../static/iview/base/index.js');
   export default {
     data() {
       return {
-        wprkPlace:'',
-        selectDay: '',
-        inturducer: '',
-        fee: '',
-        timeWay: '',
+        placeId: '',
+        placeData: {
+          address: '',
+          beginDate: '',
+          introducer: '',
+          remark: '',
+          fee: '',
+          payrollSystem: '', // 计时制
+          workType: '' // 工种
+        },
         isFromAdd: true,
-        selectWorker: '',
-        workerArray: [{
-            name: '瓦工1',
-            id: 1
-          },
-          {
-            name: '瓦工2',
-            id: 2
-          }, {
-            name: '瓦工3',
-            id: 3
-          }, {
-            name: '瓦工4',
-            id: 4
-          }
-        ]
+        workerArray: [],
+        radioArray: []
       }
     },
-    comupted:{
+    comupted: {
 
     },
-    components: {
-      VueTabBar
-    },
-
     methods: {
-      wprkPlaceChange(data){
-        this.wprkPlace = data.target.value
+      getWorkTypeList() {
+        this.$http.post(`/enum/work/type`).then(res => {
+          this.workerArray = res.info
+        })
       },
-       feeChange(data){
-        this.fee = data.target.value
+      getPayrollSystemList() {
+        this.$http.post(`/enum/payroll/system`).then(res => {
+          this.radioArray = res.info
+        })
       },
-      inturducerChange(data){
-        this.inturducer = data.target.value
+      getPlaceById() {
+        this.$http.get(`/work/address/queryByPk/${this.placeId}/`).then(res => {
+          this.placeData = res.info
+        })
       },
+      newPlace() {
+        if (!(this.placeData.address && this.placeData.beginDate && this.placeData.introducer && this.placeData.fee &&
+            this.placeData.payrollSystem && this.placeData.workType)) {
+          console.log(33, this.placeData)
+          $Message({
+            content: '请将表单填写完整',
+            // type: 'warning'
+          });
+          return
+        }
+
+        this.$http.post('/work/address/save', this.placeData).then(res => {
+          wx.switchTab({
+            url: `/pages/workPlace/main`,
+            success: function (res) {
+              console.log("success")
+            },
+          })
+        })
+      },
+
       bindDateChange(data) {
-        this.selectDay = data.target.value
+        this.placeData.beginDate = data.target.value
       },
       bindWorkerChange(data) {
-        console.log(data)
-        this.selectWorker = data.target.value
+        this.placeData.workType = data.target.value
       },
       timeWayChange(data) {
-        this.timeWay = data.target.value
+        this.placeData.payrollSystem = data.target.value
       },
-    },
-    onLoad(options) {
-      if (options.id) {
-        this.isFromAdd = false
-      } else {
-        this.isFromAdd = true
+      chooseLocation() {
+        wx.chooseLocation({
+          success: function (res) {
+            console.log(res)
+          }
+        })
       }
     },
-    mounted() {
+    onLoad(options) {
+      this.getWorkTypeList()
+      this.getPayrollSystemList()
+      if (options.id) {
+        this.placeId = options.id
+        this.isFromAdd = false
+        this.getPlaceById()
+      } else {
+        this.isFromAdd = true
+        for (let i in this.placeData) {
+          this.placeData[i] = null
+        }
+      }
+    },
+    mounted(options) {
 
+      var _this = this
+      // 查看是否授权
+      wx.getSetting({
+        success: function (res) {
+          wx.authorize({
+            scope: 'scope.userLocation',
+            success() {
+              wx.getLocation({
+                success: function (res) {
+                  console.log(res)
+                }
+              })
+            }
+          })
+        }
+      })
     }
   }
 </script>
 
 <style lang="stylus" scoped>
-  .bottom-btn{
-    position absolute
-    bottom 0
-    width 100%
+  .bottom-btn {
+    position absolute bottom 0 width 100%
   }
 </style>

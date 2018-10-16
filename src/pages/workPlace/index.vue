@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div>
+    <div v-if="dataArr.length > 0">
       <i-swipeout v-for="(item,index) in dataArr" :key="index" i-class="i-swipeout-demo-item" :id="item.id" :actions="actions"
         @change="menuClick">
         <view slot="content">
           <div @click="toPage('newPlace',item.id)" slot="content">
             <p>{{item.address}}</p>
-            <p>{{item.type}}</p>
-            <p>{{item.time}}</p>
+            <p>{{item.workTypeName}}</p>
+            <p>{{item.beginDate}}</p>
           </div>
         </view>
       </i-swipeout>
@@ -29,25 +29,7 @@
     data() {
       return {
         realMoney: '',
-        dataArr: [{
-            address: '真5203846383',
-            type: '水电管|小时制',
-            time: '2018.12.12',
-            id: 1
-          },
-          {
-            address: '大5203846383',
-            type: '水电管|小时制',
-            time: '2018.12.12',
-            id: 2
-          },
-          {
-            address: '路5203846383',
-            type: '水电管|小时制',
-            time: '2018.12.12',
-            id: 3
-          }
-        ],
+        dataArr: [],
         visible: false,
         actions: [{
             name: '结账',
@@ -79,6 +61,14 @@
     },
 
     methods: {
+      getAdderssList() {
+        this.$http.post('/work/address/list', {
+          currentPage: 1,
+          pageSize: 10
+        }).then(res => {
+          this.dataArr = res.info.list
+        })
+      },
       toPage(to, data) {
         wx.navigateTo({
           url: `/pages/${to}/main?id=${data}`,
@@ -106,9 +96,11 @@
       }
 
     },
-
-    mounted() {
-
+    onLoad(options) {
+      this.getAdderssList()
+    },
+    onShow(e) {
+      this.$mp.page.onLoad();
     }
   }
 </script>
