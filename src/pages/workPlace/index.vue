@@ -96,11 +96,8 @@
       }
 
     },
-    onLoad(options) {
+    onShow() {
       this.getAdderssList()
-    },
-    onShow(e) {
-      this.$mp.page.onLoad();
     }
   }
 </script>

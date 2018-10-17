@@ -1,38 +1,30 @@
 <template>
   <div>
-    <div>
-      <i-panel>
-        <i-input value="111" title="当前工地:" :disabled="true" />
-      </i-panel>
-      <i-panel>
-        <i-input value="111" title="每天工资:" :disabled="true" />
-      </i-panel>
-    </div>
-    <p>
-      <i-panel>
-        <picker mode="date" :value="selectDay" @change="bindDateChange">
-          <input :value="selectDay" :disabled="true" placeholder="请选择进场日期" />
+    <i-cell-group>
+      <i-cell title="当前工地:">
+        <input slot="footer" v-model="palceName" :disabled="true" />
+      </i-cell>
+      <i-cell title="开始时间:" v-if="placeData.payrollSystem == 1">
+        <picker slot="footer" mode="time" :value="placeData.startTime" @change="bindStartDateChange">
+          <input v-model="placeData.startTime" :disabled="true" />
         </picker>
-      </i-panel>
-    </p>
-    <p>
-      <i-panel>
-        <input v-model="workTime" type="digit" placeholder="请填写工作时长"/>
-      </i-panel>
-
-    </p>
-    <p>
-      <i-panel title="工作天数:">
-        <radio-group class="radio-group" @change="handleFruitChange">
+      </i-cell>
+      <i-cell title="结束时间:" v-if="placeData.payrollSystem == 1">
+        <picker slot="footer" mode="time" :value="placeData.endTime" @change="bindEndDateChange">
+          <input v-model="placeData.endTime" :disabled="true" />
+        </picker>
+      </i-cell>
+      <i-cell title="工作天数:" v-if="placeData.payrollSystem == 2">
+        <radio-group slot="footer" class="radio-group" @change="handleFruitChange">
           <label class="radio" v-for="(item, index) in radioArray" :key="item.code">
-            <radio :value="item.code"/> {{item.name}}
+            <radio :value="item.code" /> {{item.name}}
           </label>
         </radio-group>
-      </i-panel>
+      </i-cell>
+    </i-cell-group>
 
-    </p>
     <div class="bottom-btn">
-          <i-button type="primary">保存</i-button>
+      <i-button @click="save" type="primary">保存</i-button>
     </div>
     <!-- <VueTabBar></VueTabBar> -->
   </div>
@@ -40,21 +32,28 @@
 
 <script>
   import VueTabBar from '../../components/tabBar/tabBar.vue'
-
+  import {formatTime} from '../../utils/index.js'
   export default {
     data() {
       return {
-        selectDay: '',
-        workTime: '',
-        workDay: '',
-        radioArray:[{
-          code:1,
-          name:'1天'
+        palceName:'',
+        placeId: '',
+        placeData: {
+          startTime:'',
+          endTime:'',
+          hour:'',
+          payrollSystem:'',
+          workId:this.placeId
         },
-        {
-          code:2,
-          name:'0.5天'
-        }]
+        radioArray: [{
+            code: 1,
+            name: '1天'
+          },
+          {
+            code: 0.5,
+            name: '0.5天'
+          }
+        ]
       }
     },
 
@@ -63,25 +62,36 @@
     },
 
     methods: {
-      bindDateChange(data) {
-        this.selectDay = data.target.value
+      getPlaceById() {
+        this.$http.get(`/work/address/queryByPk/${this.placeId}/`).then(res => {
+          this.palceName = res.info.address
+          this.placeData.payrollSystem = res.info.payrollSystem
+        })
+      },
+      save(){
+        this.$http.post(`/work/log/save`,this.placeData).then(res => {
+          console.log('成功')
+        })
+      },
+      bindStartDateChange(data) {
+        this.placeData.startTime = formatTime(new Date()) + ' ' + data.target.value
+      },
+      bindEndDateChange(data) {
+        this.placeData.endTime = formatTime(new Date()) + ' ' + data.target.value
       },
       handleFruitChange(data) {
-        console.log(1, data)
-        this.workDay = data.target.value
+        this.placeData.hour = data.target.value
       }
     },
-
-    mounted() {
-
+    onShow() {
+      this.placeId = this.$mp.page.options.id ? this.$mp.page.options.id : ''
+      this.getPlaceById()
     }
   }
 </script>
 
 <style lang="stylus" scoped>
-.bottom-btn{
-    position absolute
-    bottom 0
-    width 100%
+  .bottom-btn {
+    position absolute bottom 0 width 100%
   }
 </style>

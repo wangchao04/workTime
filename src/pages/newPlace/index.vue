@@ -1,39 +1,43 @@
 <template>
   <div>
-    <div>
-      <i-panel title="工作地点:">
-        <input v-model="placeData.address" :disabled="!(isFromAdd || placeData.status == 1)" />
-      </i-panel>
-      <i-panel title="金额:">
-        <input v-model="placeData.fee" type="digit" :disabled="!(isFromAdd || placeData.status == 1)" />
-      </i-panel>
-      <i-panel title="介绍人:">
-        <input v-model="placeData.introducer" :disabled="!(isFromAdd || placeData.status == 1)" />
-      </i-panel>
-      <i-panel title="备注:">
-        <input v-model="placeData.remark" :disabled="!(isFromAdd || placeData.status == 1)" />
-      </i-panel>
-      <i-panel title="工种:">
-        <picker v-if="isFromAdd || placeData.status == 1" mode="selector" range-key="name" :range="workerArray" :value="placeData.workType"
-          @change="bindWorkerChange">
-          <input :disabled="true" :value="workerArray[placeData.workType] ? workerArray[placeData.workType].name : ''" />
-        </picker>
-        <input v-else v-model="placeData.workTypeName" :disabled="true">
-      </i-panel>
-      <i-panel title="进场日期:">
-        <picker v-if="isFromAdd || placeData.status == 1" mode="date" :value="placeData.beginDate" @change="bindDateChange">
-          <input :disabled="true" v-model="placeData.beginDate" />
-        </picker>
-        <input v-else v-model="placeData.beginDate" :disabled="true">
-      </i-panel>
-      <i-panel title="计时制:">
-        <radio-group v-if="isFromAdd || placeData.status == 1" class="radio-group" @change="timeWayChange">
-          <label class="radio" v-for="(item, index) in radioArray" :key="item.code">
-            <radio :value="item.code" :checked="placeData.payrollSystem == item.code" /> {{item.name}}
-          </label>
-        </radio-group>
-        <input v-else v-model="placeData.payrollSystemName" :disabled="true">
-      </i-panel>
+    <div class="">
+      <i-cell-group>
+        <i-cell title="计时制:">
+          <radio-group slot="footer" v-if="isFromAdd || placeData.status == 1" class="radio-group" @change="timeWayChange">
+            <label class="radio" v-for="(item, index) in radioArray" :key="item.code">
+              <radio :value="item.code" :checked="placeData.payrollSystem == item.code" /> {{item.name}}
+            </label>
+          </radio-group>
+          <input slot="footer" v-else v-model="placeData.payrollSystemName" :disabled="true">
+        </i-cell>
+        <i-cell title="工作地点:">
+          <input slot="footer" v-model="placeData.address" :disabled="!(isFromAdd || placeData.status == 1)" />
+        </i-cell>
+        <i-cell title="金额:">
+          <input slot="footer" v-model="placeData.fee" type="digit" :disabled="!(isFromAdd || placeData.status == 1)" />
+        </i-cell>
+        <i-cell title="介绍人:">
+          <input slot="footer" v-model="placeData.introducer" :disabled="!(isFromAdd || placeData.status == 1)" />
+        </i-cell>
+        <i-cell title="备注:">
+          <input slot="footer" v-model="placeData.remark" :disabled="!(isFromAdd || placeData.status == 1)" />
+        </i-cell>
+        <i-cell title="工种:">
+          <picker slot="footer" v-if="isFromAdd || placeData.status == 1" mode="selector" range-key="name" :range="workerArray"
+            :value="placeData.workType" @change="bindWorkerChange">
+            <input :disabled="true" :value="workerArray[placeData.workType] ? workerArray[placeData.workType].name : ''" />
+          </picker>
+          <input slot="footer" v-else v-model="placeData.workTypeName" :disabled="true">
+        </i-cell>
+        <i-cell title="进场日期:">
+          <picker slot="footer" v-if="isFromAdd || placeData.status == 1" mode="date" :value="placeData.beginDate"
+            @change="bindDateChange">
+            <input :disabled="true" v-model="placeData.beginDate" />
+          </picker>
+          <input slot="footer" v-else v-model="placeData.beginDate" :disabled="true">
+        </i-cell>
+      </i-cell-group>
+
     </div>
     <div class="bottom-btn" v-if="isFromAdd || placeData.status == 1">
       <i-button @click="newPlace()" type="primary">保存</i-button>
@@ -121,11 +125,11 @@
         })
       }
     },
-    onLoad(options) {
+    onShow() {
       this.getWorkTypeList()
       this.getPayrollSystemList()
-      if (options.id) {
-        this.placeId = options.id
+      this.placeId = this.$mp.page.options.id ? this.$mp.page.options.id : ''
+      if (this.placeId) {
         this.isFromAdd = false
         this.getPlaceById()
       } else {
@@ -134,25 +138,6 @@
           this.placeData[i] = null
         }
       }
-    },
-    mounted(options) {
-
-      var _this = this
-      // 查看是否授权
-      wx.getSetting({
-        success: function (res) {
-          wx.authorize({
-            scope: 'scope.userLocation',
-            success() {
-              wx.getLocation({
-                success: function (res) {
-                  console.log(res)
-                }
-              })
-            }
-          })
-        }
-      })
     }
   }
 </script>

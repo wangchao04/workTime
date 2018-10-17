@@ -39,10 +39,6 @@
       Calendar,
       VueTabBar
     },
-    onLoad: function () {
-      var _this = this
-
-    },
 
     methods: {
       login() {
@@ -86,7 +82,6 @@
 
     mounted() {
       this.getMonth()
-
      // this.login()
       var _this = this
       // 查看是否授权

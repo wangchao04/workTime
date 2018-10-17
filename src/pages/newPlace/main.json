@@ -4,7 +4,9 @@
     "i-button": "../../../static/iview/button/index",
     "i-tab-bar": "../../../static/iview/tab-bar/index",
     "i-tab-bar-item": "../../../static/iview/tab-bar-item/index",
-    "i-panel": "../../../static/iview/panel/index",
-    "i-message": "../../../static/iview/message/index"
+    "i-message": "../../../static/iview/message/index",
+    "i-cell": "../../../static/iview/cell/index",
+    "i-cell-group": "../../../static/iview/cell-group/index",
+    "i-input":"../../../static/iview/input/index"
   }
 }
