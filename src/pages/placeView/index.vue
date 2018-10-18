@@ -36,7 +36,7 @@
   export default {
     data() {
       return {
-        placeId: '',
+        workId: '',
         placeData: {
           address: '',
           beginDate: '',
@@ -53,13 +53,13 @@
     },
     methods: {
       getPlaceById() {
-        this.$http.get(`/work/address/queryByPk/${this.placeId}/`).then(res => {
+        this.$http.get(`/work/address/queryByPk/${this.workId}/`).then(res => {
           this.placeData = res.info
         })
       },
     },
     onShow() {
-      this.placeId = this.$mp.page.options.id ? this.$mp.page.options.id : ''
+      this.workId = this.$mp.page.options.id ? this.$mp.page.options.id : ''
       this.getPlaceById()
     }
   }

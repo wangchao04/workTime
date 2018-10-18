@@ -53,7 +53,7 @@
   export default {
     data() {
       return {
-        placeId: '',
+        workId: '',
         placeData: {
           address: '',
           beginDate: '',
@@ -83,7 +83,7 @@
         })
       },
       getPlaceById() {
-        this.$http.get(`/work/address/queryByPk/${this.placeId}/`).then(res => {
+        this.$http.get(`/work/address/queryByPk/${this.workId}/`).then(res => {
           this.placeData = res.info
         })
       },
@@ -99,12 +99,22 @@
         }
 
         this.$http.post('/work/address/save', this.placeData).then(res => {
-          wx.switchTab({
-            url: `/pages/workPlace/main`,
-            success: function (res) {
-              console.log("success")
-            },
-          })
+          if (res.success) {
+            wx.switchTab({
+              url: `/pages/workPlace/main`,
+              success: function (res) {
+                $Message({
+                  content: '保存成功',
+                  // type: 'warning'
+                });
+              },
+            })
+          }else{
+            $Message({
+            content: res.message,
+             type: 'warning'
+          });
+          }
         })
       },
 
@@ -128,8 +138,8 @@
     onShow() {
       this.getWorkTypeList()
       this.getPayrollSystemList()
-      this.placeId = this.$mp.page.options.id ? this.$mp.page.options.id : ''
-      if (this.placeId) {
+      this.workId = this.$mp.page.options.id ? this.$mp.page.options.id : ''
+      if (this.workId) {
         this.isFromAdd = false
         this.getPlaceById()
       } else {

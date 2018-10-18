@@ -6,7 +6,8 @@
           <p>{{item.workTypeName}}</p>
           <p>{{item.beginDate}}</p>
           <p>{{item.statusName}}</p>
-          <i-icon @click="selectedItem = item; actionVisible = true" slot="footer" type="other" size="28" color="#80848f" />
+          <i-icon v-if="item.status == 1" @click="selectedItem = item; actionVisible = true" slot="footer" type="other"
+            size="28" color="#80848f" />
         </i-cell>
       </i-cell-group>
     </div>
@@ -14,10 +15,6 @@
       <i-action-sheet :visible="actionVisible" :actions="actions" @cancel="handleClickCancel" @clickItem="handleClickItem" />
     </div>
     <i-modal title="结账" :visible="visible" @ok.stop="handleOk" @cancel.stop="handleClose">
-      <!-- 应收 : $12000
-      <i-panel v-if="visible" :hide-border="true">
-        <input type="digit" v-model="realMoney" autofocus placeholder="请填写实收金额" />
-      </i-panel> -->
     </i-modal>
     <i-modal title="删除确认" :visible="deleteVisible" @cancel.stop="handleClose" @ok.stop="deleteOk">
       <view>删除后无法恢复哦</view>
@@ -37,6 +34,10 @@
       return {
         deleteVisible: false,
         actionVisible: false,
+        selectedItem: {},
+        realMoney: '',
+        dataArr: [],
+        visible: false,
         actions: [{
             name: '编辑',
           },
@@ -51,25 +52,14 @@
           },
           {
             name: '删除',
-            id: 9,
             color: '#ed3f14'
           }
-        ],
-        selectedItem: {},
-        realMoney: '',
-        dataArr: [],
-        visible: false,
+        ]
       }
     },
 
-    computed:{
-      // actions(){
-      //   var actions = []
-      //   if(this.selectedItem.status == 2){// 结账中
+    computed: {
 
-      //   } 
-      //   return 
-      // }
     },
 
     components: {
@@ -80,7 +70,7 @@
       deleteOk() {
         this.$http.post('/work/address/openOrClose', {
           active: 0,
-          ids: [this.selectedItem.id]
+          ids: [this.selectedItem.workId]
         }).then(res => {
           if (res.success) {
             this.getAdderssList()
@@ -104,13 +94,23 @@
       handleClickItem(event) {
         switch (event.target.name) {
           case '编辑':
-            this.toPage('newPlace', this.selectedItem.id)
+            this.toPage('newPlace', this.selectedItem.workId)
+            this.actionVisible = false
             break
           case '记工':
-            this.toPage('remarkTime', this.selectedItem.id)
+            if (this.selectedItem.payrollSystem == 3) {
+              $Message({
+                content: '包工制无需记工',
+                type: 'warning'
+              });
+            } else {
+              this.toPage('remarkTime', this.selectedItem.workId)
+              this.actionVisible = false
+            }
             break
           case '收款':
-            this.toPage('actualPay', this.selectedItem.id)
+            this.toPage('actualPay', this.selectedItem.workId)
+            this.actionVisible = false
             break
           case '结账':
             this.visible = true
@@ -119,7 +119,6 @@
             this.deleteVisible = true
             break
         }
-         this.actionVisible = false
       },
       getAdderssList() {
         this.$http.post('/work/address/list', {
@@ -145,7 +144,7 @@
       // 结账
       handleOk() {
         this.$http.post('/receivable/save', {
-          woekId: this.selectedItem.id
+          workId: this.selectedItem.workId
         }).then(res => {
           if (res.success) {
             this.visible = false

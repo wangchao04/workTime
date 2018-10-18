@@ -9,6 +9,10 @@ Vue.prototype.$http = fly
 
 //添加拦截器
 fly.interceptors.request.use((config, promise) => {
+  // wx.showLoading({
+  //   title:'加载中',
+  //   mask:true
+  // })
   var UID = wx.getStorageSync("UID")
   config.headers["UID"] = UID
   //可以通过promise.reject／resolve直接中止请求
@@ -23,10 +27,8 @@ fly.interceptors.response.use(
   (err, promise) => {
     //promise.resolve("ssss")
     if (err.status == '401') {
-      fly.lock()
       wx.login({
         success(res) {
-          fly.unlock()
           fly.get(`/login/code2Session/${res.code}`).then((res) => {
             wx.setStorageSync("UID", res.info.UID)
             return fly.request(err.request);

@@ -26,23 +26,29 @@
     <div class="bottom-btn">
       <i-button @click="save" type="primary">保存</i-button>
     </div>
+    <i-message id="message" />
     <!-- <VueTabBar></VueTabBar> -->
   </div>
 </template>
 
 <script>
   import VueTabBar from '../../components/tabBar/tabBar.vue'
-  import {formatTime} from '../../utils/index.js'
+  const {
+    $Message
+  } = require('../../../static/iview/base/index.js');
+  import {
+    formatTime
+  } from '../../utils/index.js'
   export default {
     data() {
       return {
-        palceName:'',
+        palceName: '',
         placeData: {
-          startTime:'',
-          endTime:'',
-          hour:'',
-          payrollSystem:'',
-          workId:''
+          startTime: '',
+          endTime: '',
+          hour: '',
+          payrollSystem: '',
+          workId: ''
         },
         radioArray: [{
             code: 1,
@@ -67,13 +73,27 @@
           this.placeData.payrollSystem = res.info.payrollSystem
         })
       },
-      save(){
-       // delete this.placeData.workId
-        this.$http.post(`/work/log/save`,this.placeData).then(res => {
-          for(let i in this.placeData){
-            this.placeData[i] = ''
+      save() {
+        this.$http.post(`/work/log/save`, this.placeData).then(res => {
+          if (res.success) {
+            for (let i in this.placeData) {
+              this.placeData[i] = ''
+            }
+            wx.switchTab({
+              url: `/pages/workPlace/main`,
+              success: function (res) {
+                $Message({
+                  content: '保存成功',
+                  // type: 'warning'
+                });
+              }
+            })
+          } else {
+            $Message({
+              content: res.message,
+              type: 'warning'
+            });
           }
-          console.log('成功')
         })
       },
       bindStartDateChange(data) {

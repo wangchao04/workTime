@@ -32,13 +32,14 @@
   export default {
     data() {
       return {
-        placeId: '',
+        workId: '',
         actualData: {
           payName: '',
           paidInFee: '',
           paidDate: '',
           remark: '',
-          workId: ''
+          workId: '',
+          receivablesId:''
         },
       }
     },
@@ -83,7 +84,10 @@
       },
     },
     onShow() {
-      this.actualData.workId = this.$mp.page.options.id ? this.$mp.page.options.id : ''
+      var id = this.$mp.page.options.id
+      var receivablesNo = this.$mp.page.options.receivablesNo
+      this.actualData.workId = id && id != 'undefined' ? id : null
+      this.actualData.receivablesId = receivablesNo && receivablesNo != 'undefined' ? receivablesNo : null
     }
   }
 </script>

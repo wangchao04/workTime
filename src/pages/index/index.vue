@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="calendarWrap">
-      <Calendar :events="events" :clean="true" @select="select" ref="calendar" />
+      <Calendar :events="events" :clean="true" @prev="selectMounth" @next="selectMounth" @select="select" ref="calendar" />
     </div>
     <div @click="toPage('newPlace')" class="addPlace">
       <i-icon type="add" size="30" color="#fff" />
@@ -19,19 +19,18 @@
 </template>
 
 <script>
-  import Calendar from 'mpvue-calendar'
+ // import Calendar from 'mpvue-calendar'
   import VueTabBar from '../../components/card.vue'
+  import Calendar from '../../components/calendar/mpvue-calendar.vue'
+  import {formatTime} from '../../utils/index.js'
 
   export default {
     data() {
       return {
-        code: '',
-        userData: '',
+        tileContent:[{date: '2018-9-20', className: 'holiday', content: '.'}],
+        userData: {},
         canIUse: wx.canIUse('button.open-type.getUserInfo'),
-        events: {
-          '2018-9-7': '今日备注',
-          '2018-9-8': '一条很长的明日备注'
-        },
+        events: {},
       }
     },
 
@@ -39,29 +38,18 @@
       Calendar,
       VueTabBar
     },
-
     methods: {
-      login() {
-        var _this = this
-        wx.login({
-          success(res) {
-            console.log('code', res)
-            _this.$http.get(`/login/code2Session/${res.code}`).then((res) => {
-              console.log('登录成功', res)
-              wx.setStorage({
-                key: "UID",
-                data: res.info.UID
-              })
-            })
-          }
-        })
-      },
       bindGetUserInfo: function (e) {
 
       },
+      selectMounth(mounth,year) {
+        var selectMounth = year + '-' + mounth
+        console.log(mounth,year)
+        this.getMonth(selectMounth)
 
+      },
       select(val) {
-        console.log(val)
+          console.log(val)
       },
       toPage(to) {
         wx.navigateTo({
@@ -71,18 +59,29 @@
           },
         })
       },
-      getMonth(){
-        this.$http.post('/work/log/queryMonth',{
-           date: "2018-09"
+      getMonth(value) {
+        this.$http.post('/work/log/queryMonth', {
+          date: value
         }).then(res => {
-          console.log('月份',res.info)
+          res.info.forEach(ele => {
+            this.$set(this.events,ele.days,'备注')
+          });
         })
       }
     },
-
+    onReachBottom() {
+      console.log('searchScrollLower')
+    },
+    onPullDownRefresh() {
+      console.log('PullDownRefresh');
+    },
+    onShow(){
+      var data = new Date()
+      var mounth = data.getMonth() + 1
+      var params = data.getFullYear() + '-' + mounth
+      this.getMonth(params)
+    },
     mounted() {
-      this.getMonth()
-     // this.login()
       var _this = this
       // 查看是否授权
       wx.getSetting({
@@ -126,7 +125,9 @@
   .calendarWrap {
     height 80vh
   }
-
+  .holiday{
+    color red
+  }
   .bottom-btn {
     position absolute bottom 0 width 100%
   }

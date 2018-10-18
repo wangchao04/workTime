@@ -9,6 +9,7 @@
     "i-radio": "../../../static/iview/radio/index",
     "i-input": "../../../static/iview/input/index",
     "i-cell": "../../../static/iview/cell/index",
-    "i-cell-group": "../../../static/iview/cell-group/index"
+    "i-cell-group": "../../../static/iview/cell-group/index",
+    "i-message": "../../../static/iview/message/index"
   }
 }

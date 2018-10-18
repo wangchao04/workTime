@@ -5,6 +5,9 @@
     "i-tab-bar": "../../../static/iview/tab-bar/index",
     "i-tab-bar-item": "../../../static/iview/tab-bar-item/index",
     "i-cell": "../../../static/iview/cell/index",
-    "i-cell-group": "../../../static/iview/cell-group/index"
+    "i-icon": "../../../static/iview/icon/index",
+    "i-cell-group": "../../../static/iview/cell-group/index",
+    "i-action-sheet": "../../../static/iview/action-sheet/index",
+    "i-message": "../../../static/iview/message/index"
   }
 }
