@@ -37,13 +37,12 @@
     data() {
       return {
         palceName:'',
-        placeId: '',
         placeData: {
           startTime:'',
           endTime:'',
           hour:'',
           payrollSystem:'',
-          workId:this.placeId
+          workId:''
         },
         radioArray: [{
             code: 1,
@@ -63,28 +62,32 @@
 
     methods: {
       getPlaceById() {
-        this.$http.get(`/work/address/queryByPk/${this.placeId}/`).then(res => {
+        this.$http.get(`/work/address/queryByPk/${this.placeData.workId}/`).then(res => {
           this.palceName = res.info.address
           this.placeData.payrollSystem = res.info.payrollSystem
         })
       },
       save(){
+       // delete this.placeData.workId
         this.$http.post(`/work/log/save`,this.placeData).then(res => {
+          for(let i in this.placeData){
+            this.placeData[i] = ''
+          }
           console.log('成功')
         })
       },
       bindStartDateChange(data) {
-        this.placeData.startTime = formatTime(new Date()) + ' ' + data.target.value
+        this.placeData.startTime = formatTime(new Date()) + ' ' + data.target.value + ':00'
       },
       bindEndDateChange(data) {
-        this.placeData.endTime = formatTime(new Date()) + ' ' + data.target.value
+        this.placeData.endTime = formatTime(new Date()) + ' ' + data.target.value + ':00'
       },
       handleFruitChange(data) {
         this.placeData.hour = data.target.value
       }
     },
     onShow() {
-      this.placeId = this.$mp.page.options.id ? this.$mp.page.options.id : ''
+      this.placeData.workId = this.$mp.page.options.id ? this.$mp.page.options.id : ''
       this.getPlaceById()
     }
   }

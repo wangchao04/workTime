@@ -36,8 +36,8 @@ Component({
 
         handleClickItem ({ currentTarget = {} }) {
             const dataset = currentTarget.dataset || {};
-            const { index } = dataset;
-            this.triggerEvent('click', { index });
+            const { name } = dataset;
+            this.triggerEvent('clickItem', { name });
         },
 
         handleClickCancel () {

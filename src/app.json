@@ -6,7 +6,9 @@
     "pages/shouldPay/main",
     "pages/workPlace/main",
     "pages/newPlace/main",
-    "pages/remarkTime/main"
+    "pages/remarkTime/main",
+    "pages/placeView/main",
+    "pages/actualPay/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

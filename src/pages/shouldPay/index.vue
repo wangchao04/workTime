@@ -1,6 +1,10 @@
 <template>
   <div>
-    应收
+    <i-cell-group>
+      <i-cell v-for="(item,index) in dataArr" :key="index" title="" is-link>
+         {{item.remark}}
+      </i-cell>
+    </i-cell-group>
     <!-- <VueTabBar></VueTabBar> -->
   </div>
 </template>
@@ -11,7 +15,7 @@
   export default {
     data() {
       return {
-
+        dataArr: []
       }
     },
 
@@ -20,11 +24,19 @@
     },
 
     methods: {
-
+      // 获取应收列表
+      getShouldPayList() {
+        this.$http.post('/receivable/list', {
+          currentPage: 1,
+          pageSize: 10
+        }).then(res => {
+          this.dataArr = res.info.list
+        })
+      }
     },
 
-       mounted() {
-
+    onShow() {
+      this.getShouldPayList()
     }
   }
 </script>

@@ -7,6 +7,11 @@
     "i-swipeout": "../../../static/iview/swipeout/index",
     "i-modal": "../../../static/iview/modal/index",
     "i-panel": "../../../static/iview/panel/index",
-    "i-input": "../../../static/iview/input/index"
+    "i-input": "../../../static/iview/input/index",
+    "i-cell": "../../../static/iview/cell/index",
+    "i-cell-group": "../../../static/iview/cell-group/index",
+    "i-icon": "../../../static/iview/icon/index",
+    "i-action-sheet": "../../../static/iview/action-sheet/index",
+    "i-message": "../../../static/iview/message/index"
   }
 }
