@@ -950,7 +950,7 @@
   .dot2 {
     width: 10rpx;
     height: 10rpx;
-    background-color: red;
+    background-color: #FFC125;
     border-radius: 50%;
     margin: 0 auto;
     margin-top: 5rpx;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="">
+    <div class="newPlace">
       <i-cell-group>
         <i-cell title="计时制:">
           <radio-group slot="footer" v-if="isFromAdd || placeData.status == 1" class="radio-group" @change="timeWayChange">
@@ -11,7 +11,9 @@
           <input slot="footer" v-else v-model="placeData.payrollSystemName" :disabled="true">
         </i-cell>
         <i-cell title="工作地点:">
-          <input slot="footer" v-model="placeData.address" :disabled="!(isFromAdd || placeData.status == 1)" />
+          <input slot="footer" v-if="isFromAdd || placeData.status == 1" @click="getLocation()" v-model="placeData.address"
+            :disabled="true" />
+          <input slot="footer" v-else v-model="placeData.address" :disabled="true" />
         </i-cell>
         <i-cell title="金额:">
           <input slot="footer" v-model="placeData.fee" type="digit" :disabled="!(isFromAdd || placeData.status == 1)" />
@@ -72,6 +74,15 @@
 
     },
     methods: {
+      getLocation() {
+        var _this = this
+        wx.chooseLocation({
+          success: function (res) {
+            _this.placeData.address = res.name
+            console.log(1, _this.placeData.address)
+          }
+        })
+      },
       getWorkTypeList() {
         this.$http.post(`/enum/work/type`).then(res => {
           this.workerArray = res.info
@@ -109,11 +120,11 @@
                 });
               },
             })
-          }else{
+          } else {
             $Message({
-            content: res.message,
-             type: 'warning'
-          });
+              content: res.message,
+              type: 'warning'
+            });
           }
         })
       },
@@ -136,6 +147,9 @@
       }
     },
     onShow() {
+
+    },
+    mounted() {
       this.getWorkTypeList()
       this.getPayrollSystemList()
       this.workId = this.$mp.page.options.id ? this.$mp.page.options.id : ''
@@ -155,5 +169,11 @@
 <style lang="stylus" scoped>
   .bottom-btn {
     position absolute bottom 0 width 100%
+  }
+
+  .newPlace {
+    input {
+      width: 70vw;
+    }
   }
 </style>

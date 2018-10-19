@@ -80,9 +80,10 @@
       var mounth = data.getMonth() + 1
       var params = data.getFullYear() + '-' + mounth
       this.getMonth(params)
-    },
-    mounted() {
-      var _this = this
+
+
+
+var _this = this
       // 查看是否授权
       wx.getSetting({
         success: function (res) {
@@ -105,8 +106,8 @@
               }
             })
           }
+                      // 已经授权，可以直接调用 getUserInfo 获取头像昵称
           if (res.authSetting['scope.userInfo']) {
-            // 已经授权，可以直接调用 getUserInfo 获取头像昵称
             wx.getUserInfo({
               success: function (res) {
                 // alert(res.userInfo)
@@ -117,6 +118,10 @@
           }
         }
       })
+
+    },
+    mounted() {
+      
     }
   }
 </script>

@@ -74,7 +74,8 @@
         }).then(res => {
           if (res.success) {
             this.getAdderssList()
-            this.deleteVisible = false,
+            this.deleteVisible = false
+            this.actionVisible = false
               $Message({
                 content: '删除成功',
                 // type: 'warning'
@@ -148,6 +149,7 @@
         }).then(res => {
           if (res.success) {
             this.visible = false
+             this.actionVisible = false
             $Message({
               content: '结账成功',
             });

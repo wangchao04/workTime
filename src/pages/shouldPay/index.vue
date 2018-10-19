@@ -37,7 +37,7 @@
       handleClickItem(event) {
         switch (event.target.name) {
           case '收款':
-            this.toPage('actualPay', this.selectedItem.workId,this.selectedItem.receivablesNo)
+            this.toPage('actualPay', this.selectedItem.workId,this.selectedItem.id)
             break
         }
         this.actionVisible = false
