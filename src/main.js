@@ -27,14 +27,20 @@ fly.interceptors.response.use(
   (err, promise) => {
     //promise.resolve("ssss")
     if (err.status == '401') {
-      wx.login({
-        success(res) {
-          fly.get(`/login/code2Session/${res.code}`).then((res) => {
-            wx.setStorageSync("UID", res.info.UID)
-            return fly.request(err.request);
-          })
-        }
+
+
+      wx.navigateTo({
+        url: `/pages/login/main`,
       })
+
+      // wx.login({
+      //   success(res) {
+      //     fly.get(`/login/code2Session/${res.code}`).then((res) => {
+      //       wx.setStorageSync("UID", res.info.UID)
+      //       return fly.request(err.request);
+      //     })
+      //   }
+      // })
     }else{
       wx.showToast({
         title:'服务器错误',

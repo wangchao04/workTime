@@ -1,13 +1,14 @@
 {
-  "navigationBarTitleText": "工地",
+  "navigationBarTitleText": "授权",
+  "enablePullDownRefresh": true,
   "usingComponents": {
     "i-button": "../../../static/iview/button/index",
     "i-tab-bar": "../../../static/iview/tab-bar/index",
     "i-tab-bar-item": "../../../static/iview/tab-bar-item/index",
+    "i-icon": "../../../static/iview/icon/index",
+    "i-drawer": "../../../static/iview/drawer/index",
     "i-message": "../../../static/iview/message/index",
-    "i-cell": "../../../static/iview/cell/index",
-    "i-cell-group": "../../../static/iview/cell-group/index",
-    "i-input":"../../../static/iview/input/index",
-    "i-icon": "../../../static/iview/icon/index"
+    "i-modal": "../../../static/iview/modal/index"
+  
   }
 }

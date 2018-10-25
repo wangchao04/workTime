@@ -2,41 +2,45 @@
   <div>
     <div class="newPlace">
       <i-cell-group>
-        <i-cell title="计时制:">
-          <radio-group slot="footer" v-if="isFromAdd || placeData.status == 1" class="radio-group" @change="timeWayChange">
-            <label class="radio" v-for="(item, index) in radioArray" :key="item.code">
-              <radio :value="item.code" :checked="placeData.payrollSystem == item.code" /> {{item.name}}
-            </label>
-          </radio-group>
-          <input slot="footer" v-else v-model="placeData.payrollSystemName" :disabled="true">
-        </i-cell>
-        <i-cell title="工作地点:">
-          <input slot="footer" v-if="isFromAdd || placeData.status == 1" @click="getLocation()" v-model="placeData.address"
-            :disabled="true" />
-          <input slot="footer" v-else v-model="placeData.address" :disabled="true" />
-        </i-cell>
-        <i-cell title="金额:">
-          <input slot="footer" v-model="placeData.fee" type="digit" :disabled="!(isFromAdd || placeData.status == 1)" />
-        </i-cell>
-        <i-cell title="介绍人:">
-          <input slot="footer" v-model="placeData.introducer" :disabled="!(isFromAdd || placeData.status == 1)" />
-        </i-cell>
-        <i-cell title="备注:">
-          <input slot="footer" v-model="placeData.remark" :disabled="!(isFromAdd || placeData.status == 1)" />
-        </i-cell>
-        <i-cell title="工种:">
-          <picker slot="footer" v-if="isFromAdd || placeData.status == 1" mode="selector" range-key="name" :range="workerArray"
-            :value="placeData.workType" @change="bindWorkerChange">
-            <input :disabled="true" :value="workerArray[placeData.workType] ? workerArray[placeData.workType].name : ''" />
+        <i-cell title="计时制(必填):">
+          <picker slot="footer" v-if="isFromAdd || placeData.status == 1" mode="selector" range-key="name" :value="timeIndex"
+            :range="timeWayArray" @change="timeWayChange">
+            <input placeholder="请选择计时制" :value="timeWayArray[timeIndex] ? timeWayArray[timeIndex].name : ''" :disabled="true">
           </picker>
-          <input slot="footer" v-else v-model="placeData.workTypeName" :disabled="true">
+          <span v-else slot="footer">{{placeData.payrollSystemName}}</span>
         </i-cell>
-        <i-cell title="进场日期:">
+        <i-cell title="工作地点(必填):">
+          <div style="display:flex" slot="footer" v-if="isFromAdd || placeData.status == 1">
+            <input placeholder="请填写工作地点"  v-model="placeData.address" :disabled="false" />
+            <i-icon @click="selectAddress"  type="coordinates" size="28" color="#80848f" />
+          </div>
+
+
+          <span slot="footer" v-else>{{placeData.address}}</span>
+
+        </i-cell>
+        <i-cell title="金额(必填):">
+          <input slot="footer" placeholder="请填写金额" v-model="placeData.fee" type="digit" :disabled="!(isFromAdd || placeData.status == 1)" />
+        </i-cell>
+        <i-cell title="工种(必填):">
+          <picker slot="footer" v-if="isFromAdd || placeData.status == 1" mode="selector" range-key="name" :range="workerArray"
+            :value="workIndex" @change="bindWorkerChange">
+            <input placeholder="请选择工种" :value="workerArray[workIndex] ? workerArray[workIndex].name : ''" :disabled="true">
+          </picker>
+          <span slot="footer" v-else>{{placeData.workTypeName}}</span>
+        </i-cell>
+        <i-cell title="进场日期(必填):">
           <picker slot="footer" v-if="isFromAdd || placeData.status == 1" mode="date" :value="placeData.beginDate"
             @change="bindDateChange">
-            <input :disabled="true" v-model="placeData.beginDate" />
+            <input :disabled="true" placeholder="请选择进场日期" v-model="placeData.beginDate" />
           </picker>
-          <input slot="footer" v-else v-model="placeData.beginDate" :disabled="true">
+          <span slot="footer" v-else>{{placeData.beginDate}}</span>
+        </i-cell>
+        <i-cell title="介绍人:">
+          <input slot="footer" placeholder="请填写介绍人" v-model="placeData.introducer" :disabled="!(isFromAdd || placeData.status == 1)" />
+        </i-cell>
+        <i-cell title="备注:">
+          <input slot="footer" placeholder="请填写备注" v-model="placeData.remark" :disabled="!(isFromAdd || placeData.status == 1)" />
         </i-cell>
       </i-cell-group>
 
@@ -55,6 +59,8 @@
   export default {
     data() {
       return {
+        workIndex: -1,
+        timeIndex: -1,
         workId: '',
         placeData: {
           address: '',
@@ -67,6 +73,19 @@
         },
         isFromAdd: true,
         workerArray: [],
+        timeWayArray: [{
+            code: 1,
+            name: '小时制'
+          },
+          {
+            code: 2,
+            name: '日制'
+          },
+          {
+            code: 3,
+            name: '包工制'
+          }
+        ],
         radioArray: []
       }
     },
@@ -74,12 +93,17 @@
 
     },
     methods: {
+      selectAddress(){
+        this.getLocation()
+      },
       getLocation() {
         var _this = this
         wx.chooseLocation({
           success: function (res) {
             _this.placeData.address = res.name
-            console.log(1, _this.placeData.address)
+          },
+          fail:function(res){
+            console.log(res)
           }
         })
       },
@@ -99,9 +123,8 @@
         })
       },
       newPlace() {
-        if (!(this.placeData.address && this.placeData.beginDate && this.placeData.introducer && this.placeData.fee &&
+        if (!(this.placeData.address && this.placeData.beginDate && this.placeData.fee &&
             this.placeData.payrollSystem && this.placeData.workType)) {
-          console.log(33, this.placeData)
           $Message({
             content: '请将表单填写完整',
             // type: 'warning'
@@ -133,23 +156,15 @@
         this.placeData.beginDate = data.target.value
       },
       bindWorkerChange(data) {
-        this.placeData.workType = data.target.value
+        this.placeData.workType = this.workerArray[data.target.value].code
+        this.workIndex = data.target.value
       },
       timeWayChange(data) {
-        this.placeData.payrollSystem = data.target.value
-      },
-      chooseLocation() {
-        wx.chooseLocation({
-          success: function (res) {
-            console.log(res)
-          }
-        })
+        this.placeData.payrollSystem = this.timeWayArray[data.target.value].code
+        this.timeIndex = data.target.value
       }
     },
     onShow() {
-
-    },
-    mounted() {
       this.getWorkTypeList()
       this.getPayrollSystemList()
       this.workId = this.$mp.page.options.id ? this.$mp.page.options.id : ''
@@ -162,9 +177,19 @@
           this.placeData[i] = null
         }
       }
+      
+    },
+    mounted() {
+
     }
   }
 </script>
+<style>
+  .i-cell-text {
+    width: 100px;
+  }
+</style>
+
 
 <style lang="stylus" scoped>
   .bottom-btn {
@@ -172,8 +197,6 @@
   }
 
   .newPlace {
-    input {
-      width: 70vw;
-    }
+    input {}
   }
 </style>

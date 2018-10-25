@@ -31,7 +31,7 @@
             <span :class="{'red':k2==0||k2==6}" v-else>{{child.day}}</span>
             <div class="text remark-text" v-if="child.eventName && !clean">{{child.eventName}}</div>
             <div class="dot" v-if="child.eventName && clean"></div>
-            <div class="dot2" v-if="!(child.eventName && clean)&& !child.disabled"></div>
+            <div class="dot2" v-if="!(child.eventName && clean) && !child.disabled && child.isDot2"></div>
             <div class="text" :class="{'isLunarFestival':child.isLunarFestival,'isGregorianFestival':child.isGregorianFestival,'isTerm':child.isTerm}"
               v-if="lunar && (!child.eventName || clean)">{{child.lunar}}</div>
           </td>
@@ -187,7 +187,13 @@
         this.init();
       }
     },
+    computed: {
+      isDot() {
+        return
+      }
+    },
     mounted() {
+
       var self = this;
       wx.getSystemInfo({
         success: function (res) {
@@ -197,6 +203,14 @@
       this.init()
     },
     methods: {
+      // 判断是否小于今天
+      dot2Show(val) {
+          var month = this.month + 1
+          var date = new Date(this.year + '-' + month + '-' + val);
+          var allTime = date.getTime();
+          var nowTime = new Date().getTime()
+          return allTime < nowTime
+      },
       init() {
         let now = new Date();
         this.year = now.getFullYear()
@@ -269,7 +283,7 @@
             for (let j = 0; j < firstDayOfMonth; j++) {
               temp[line].push(Object.assign({
                   day: k,
-                  disabled: true
+                  disabled: true,
                 },
                 this.getLunarInfo(this.computedPrevYear(), this.computedPrevMonth(true), k),
                 this.getEvents(this.computedPrevYear(), this.computedPrevMonth(true), k),
@@ -418,6 +432,11 @@
           }
         }
         this.days = temp;
+        temp.forEach(item => {
+          item.forEach(item => {
+            item.isDot2 =  this.dot2Show(item.day)
+          })
+        })
         if (typeof this.now === 'boolean' && !this.now) {
           this.showToday = {
             show: false
@@ -643,7 +662,8 @@
   }
 </script>
 
-<style>
+<style lang="stylus">
+@import '../../styles/common.styl';
   .calendar {
     margin: auto;
     width: 100%;
@@ -793,7 +813,7 @@
   }
 
   .calendar td.selected span {
-    background-color: #3b75fb;
+    background-color: $theme;
     color: #fff;
   }
 
@@ -816,7 +836,7 @@
   }
 
   .calendar td.selected span.red {
-    background-color: #3b75fb;
+    background-color: $theme;
     color: #fff;
   }
 
@@ -901,8 +921,8 @@
   }
 
   .calendar-years>span.active {
-    border: 1px solid #587dff;
-    background-color: #587dff;
+    border: 1px solid $theme;
+    background-color: $theme;
     box-shadow: 4rpx 4rpx 2rpx rgba(88, 125, 255, 0.4);
     color: #fff;
   }
@@ -950,7 +970,7 @@
   .dot2 {
     width: 10rpx;
     height: 10rpx;
-    background-color: #FFC125;
+    background-color: red;
     border-radius: 50%;
     margin: 0 auto;
     margin-top: 5rpx;

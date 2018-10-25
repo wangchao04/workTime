@@ -9,7 +9,8 @@
     "pages/newPlace/main",
     "pages/remarkTime/main",
     "pages/placeView/main",
-    "pages/actualPay/main"
+    "pages/actualPay/main",
+    "pages/login/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
