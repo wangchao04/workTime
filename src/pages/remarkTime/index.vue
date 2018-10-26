@@ -23,8 +23,8 @@
       </i-cell>
     </i-cell-group>
 
-    <div class="bottom-btn">
-      <i-button @click="save" type="primary">保存</i-button>
+    <div class="btn">
+      <button @click="save">保存</button>
     </div>
     <i-message id="message" />
     <!-- <VueTabBar></VueTabBar> -->
@@ -114,7 +114,9 @@
 </script>
 
 <style lang="stylus" scoped>
+  @import '../../styles/common.styl';
   .bottom-btn {
     position absolute bottom 0 width 100%
   }
+  
 </style>

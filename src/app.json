@@ -10,7 +10,9 @@
     "pages/remarkTime/main",
     "pages/placeView/main",
     "pages/actualPay/main",
-    "pages/login/main"
+    "pages/login/main",
+    "pages/suggestion/main",
+    "pages/newSuggestion/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -20,7 +22,7 @@
   },
   "tabBar": {
     "color": "#bfbfbf",
-    "selectedColor": "#1296db",
+    "selectedColor": "#F4A900",
     "backgroundColor": "#fff",
     "borderStyle": "#bfbfbf",
     "list": [

@@ -1,14 +1,11 @@
 <template>
   <div>
     <div class="calendarWrap">
-      <Calendar :events="events" :clean="true" @prev="selectMounth" @next="selectMounth" @select="select" ref="calendar" />
+      <Calendar arrowLeft="/static/images/left.png" arrowRight="/static/images/right.png" :events="events" :clean="true" @prev="selectMounth" @next="selectMounth" @select="select" ref="calendar" />
     </div>
 
-    <div>
-      <div @click="toPage('newPlace')" class="addPlace">
-        <i-icon type="add" size="30" color="#fff" />
-      </div>
-      <p class="addPlaceText">创建工地</p>
+    <div class="btn">
+      <button @click="toPage('newPlace')">创建工地</button>
     </div>
 
     <i-drawer mode="bottom" :visible="showDrawer" @close="showDrawer = false">
@@ -21,16 +18,13 @@
               @change="bindWorkerChange">
               {{placeList[placeIndex] ? placeList[placeIndex].address :'暂无'}}
             </picker>
-            <i-icon type="enter" size="28" color="#F4A900" />
+            <i-icon v-if="placeList.length > 0" type="enter" size="28" color="#F4A900" />
           </div>
         </div>
         <div class="noPlace" v-if="placeList.length == 0">
           <p>未检测到工地,让我们来创建第一个工地</p>
-          <div>
-            <div @click="toPage('newPlace')" class="addPlace">
-              <i-icon type="add" size="30" color="#fff" />
-            </div>
-            <p class="addPlaceText">创建工地</p>
+          <div class="btn" style="position:relative">
+            <button  @click="toPage('newPlace')">创建工地</button>
           </div>
         </div>
         <div v-if="placeList.length > 0" class="placeCont">
@@ -56,7 +50,7 @@
             </picker>
           </p>
           <p style="margin-top:20px;">
-            <i-button>确认</i-button>
+            <button>确认</button>
           </p>
           <!-- <p>工作天数</p> -->
         </div>
@@ -215,6 +209,8 @@
           if (res.authSetting['scope.userInfo']) {
             wx.getUserInfo({
               success: function (res) {
+                wx.setStorageSync("avatarUrl", res.userInfo.avatarUrl)
+                wx.setStorageSync("nickName", res.userInfo.nickName)
                 _this.userlogin()
               }
             })
@@ -294,16 +290,16 @@
     position absolute bottom 0 width 100%
   }
 
-  .addPlace {
-    background: $theme;
-    width: 50px;
-    height: 50px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
+   .btn {
+    width: 100%;
+    position: fixed;
+    bottom: 5px;
 
+    button {
+      background $theme;
+      color: #FFF;
+      width: 95%;
+    }
   }
 
   .addPlaceText {

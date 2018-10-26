@@ -18,8 +18,8 @@
         </i-cell>
       </i-cell-group>
     </div>
-    <div class="bottom-btn">
-      <i-button @click="save()" type="primary">保存</i-button>
+    <div class="btn">
+      <button @click="save()">保存</button>
     </div>
     <i-message id="message" />
   </div>
@@ -93,7 +93,19 @@
 </script>
 
 <style lang="stylus" scoped>
+  @import '../../styles/common.styl';
   .bottom-btn {
     position absolute bottom 0 width 100%
+  }
+     .btn {
+    width: 100%;
+    position: fixed;
+    bottom: 5px;
+
+    button {
+      background $theme;
+      color: #FFF;
+      width: 95%;
+    }
   }
 </style>

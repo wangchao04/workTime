@@ -12,12 +12,9 @@
         <i-cell title="工作地点(必填):">
           <div style="display:flex" slot="footer" v-if="isFromAdd || placeData.status == 1">
             <input placeholder="请填写工作地点"  v-model="placeData.address" :disabled="false" />
-            <i-icon @click="selectAddress"  type="coordinates" size="28" color="#80848f" />
+            <!-- <i-icon @click="selectAddress"  type="coordinates" size="28" color="#80848f" /> -->
           </div>
-
-
           <span slot="footer" v-else>{{placeData.address}}</span>
-
         </i-cell>
         <i-cell title="金额(必填):">
           <input slot="footer" placeholder="请填写金额" v-model="placeData.fee" type="digit" :disabled="!(isFromAdd || placeData.status == 1)" />
@@ -45,8 +42,8 @@
       </i-cell-group>
 
     </div>
-    <div class="bottom-btn" v-if="isFromAdd || placeData.status == 1">
-      <i-button @click="newPlace()" type="primary">保存</i-button>
+    <div class="btn" v-if="isFromAdd || placeData.status == 1">
+      <button @click="newPlace()">保存</button>
     </div>
     <i-message id="message" />
   </div>
@@ -192,11 +189,23 @@
 
 
 <style lang="stylus" scoped>
+  @import '../../styles/common.styl';
   .bottom-btn {
     position absolute bottom 0 width 100%
   }
 
   .newPlace {
     input {}
+  }
+     .btn {
+    width: 100%;
+    position: fixed;
+    bottom: 5px;
+
+    button {
+      background $theme;
+      color: #FFF;
+      width: 95%;
+    }
   }
 </style>

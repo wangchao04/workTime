@@ -169,5 +169,6 @@
 </script>
 
 <style lang="stylus" scoped>
+  @import '../../styles/common.styl'
 
 </style>

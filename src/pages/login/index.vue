@@ -39,5 +39,12 @@
 </script>
 
 <style lang="stylus" scoped>
-
+  @import '../../styles/common.styl';
+   .btn {
+   button {
+      background $theme;
+      color: #FFF;
+      width: 95%;
+    }
+  }
 </style>

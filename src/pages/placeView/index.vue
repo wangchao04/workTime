@@ -66,6 +66,7 @@
 </script>
 
 <style lang="stylus" scoped>
+  @import '../../styles/common.styl';
   .bottom-btn {
     position absolute bottom 0 width 100%
   }
