@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div v-if="dataArr.length == 0" class="noContant">
+      暂无应收
+    </div>
     <i-cell-group>
       <i-cell v-for="(item,index) in dataArr" :key="index">
         {{item.remark}}
@@ -37,7 +40,7 @@
       handleClickItem(event) {
         switch (event.target.name) {
           case '收款':
-            this.toPage('actualPay', this.selectedItem.workId,this.selectedItem.id)
+            this.toPage('actualPay', this.selectedItem.workId, this.selectedItem.id)
             break
         }
         this.actionVisible = false
@@ -45,7 +48,7 @@
       handleClickCancel() {
         this.actionVisible = false
       },
-      toPage(to, data,data2) {
+      toPage(to, data, data2) {
         wx.navigateTo({
           url: `/pages/${to}/main?id=${data}&receivablesNo=${data2}`,
           success: function (res) {

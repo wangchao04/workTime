@@ -809,7 +809,7 @@
   }
 
   .c-today {
-    color: #3b75fb;
+    color: #F4A900;
   }
 
   .calendar td.selected span {

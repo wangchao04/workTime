@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="calendarWrap">
-      <Calendar arrowLeft="/static/images/left.png" arrowRight="/static/images/right.png" :events="events" :clean="true" @prev="selectMounth" @next="selectMounth" @select="select" ref="calendar" />
+      <Calendar arrowLeft="/static/images/left.png" arrowRight="/static/images/right.png" :events="events" :clean="true"
+        @prev="selectMounth" @next="selectMounth" @select="select" ref="calendar" />
     </div>
 
     <div class="btn">
@@ -10,11 +11,11 @@
 
     <i-drawer mode="bottom" :visible="showDrawer" @close="showDrawer = false">
       <div class="demo-container">
-        <p>{{selectData}}</p>
+        <p style="text-align:center;">{{selectData}}</p>
         <div class="selectPlace">
           <span>请选择工地:</span>
           <div>
-            <picker style="overflow:hidden;" slot="footer" range-key="address" :range="placeList" :value="placeIndex"
+            <picker :disabled="placeList.length == 0" style="overflow:hidden;" slot="footer" range-key="address" :range="placeList" :value="placeIndex"
               @change="bindWorkerChange">
               {{placeList[placeIndex] ? placeList[placeIndex].address :'暂无'}}
             </picker>
@@ -22,9 +23,13 @@
           </div>
         </div>
         <div class="noPlace" v-if="placeList.length == 0">
-          <p>未检测到工地,让我们来创建第一个工地</p>
+          <p>
+            <div>未检测到工地</div>
+            <div>让我们来创建第一个工地</div>
+          </p>
+
           <div class="btn" style="position:relative">
-            <button  @click="toPage('newPlace')">创建工地</button>
+            <button @click="toPage('newPlace')">创建工地</button>
           </div>
         </div>
         <div v-if="placeList.length > 0" class="placeCont">
@@ -50,7 +55,7 @@
             </picker>
           </p>
           <p style="margin-top:20px;">
-            <button>确认</button>
+            <button class="sureBtn">确认</button>
           </p>
           <!-- <p>工作天数</p> -->
         </div>
@@ -290,7 +295,7 @@
     position absolute bottom 0 width 100%
   }
 
-   .btn {
+  .btn {
     width: 100%;
     position: fixed;
     bottom: 5px;
@@ -305,5 +310,8 @@
   .addPlaceText {
     text-align: center;
     font-size 13px color $theme
+  }
+  .sureBtn{
+    background $theme;
   }
 </style>

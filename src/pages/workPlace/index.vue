@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div v-if="dataArr.length == 0" class="noContant">
+      暂无工地
+    </div>
     <div>
       <i-cell-group>
         <i-cell @click="toPage('placeView',item.id)" v-for="(item,index) in dataArr" :key="index" :title="item.address">
@@ -76,10 +79,10 @@
             this.getAdderssList()
             this.deleteVisible = false
             this.actionVisible = false
-              $Message({
-                content: '删除成功',
-                // type: 'warning'
-              });
+            $Message({
+              content: '删除成功',
+              // type: 'warning'
+            });
           } else {
             $Message({
               content: res.message,
@@ -149,7 +152,7 @@
         }).then(res => {
           if (res.success) {
             this.visible = false
-             this.actionVisible = false
+            this.actionVisible = false
             $Message({
               content: '结账成功',
             });
