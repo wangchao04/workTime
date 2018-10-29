@@ -4,7 +4,7 @@
       <textarea style="width:100%;" v-model="suggestion" auto-focus />
       </div>
     <div class="btn">
-      <button>保存</button>
+      <button @click="newSuggestion">保存</button>
     </div>
   </div>
 </template>
@@ -32,6 +32,13 @@
           },
         })
       },
+      newSuggestion() {
+        this.$http.post(`/feedback/save`, {
+          content:this.suggestion
+        }).then(res => {
+         
+        })
+      }
     },
     onShow() {},
 

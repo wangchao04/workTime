@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="background">
     <div v-if="dataArr.length == 0" class="noContant">
       暂无应收
     </div>
@@ -60,7 +60,7 @@
       getShouldPayList() {
         this.$http.post('/receivable/list', {
           currentPage: 1,
-          pageSize: 10
+          pageSize: 10000
         }).then(res => {
           this.dataArr = res.info.list
         })

@@ -1,14 +1,25 @@
 <template>
-  <div>
+  <div class="background">
     <div v-if="dataArr.length == 0" class="noContant">
       暂无工地
     </div>
     <div>
       <i-cell-group>
-        <i-cell @click="toPage('placeView',item.id)" v-for="(item,index) in dataArr" :key="index" :title="item.address">
-          <p>{{item.workTypeName}}</p>
+        <i-cell @click="toPage('placeView',item.id)" v-for="(item,index) in dataArr" :key="index">
+          <div class="place">
+            <span class="placeHead">{{item.firstLetter}}</span>
+            <div>
+              <p style="font-weight:900;font-size:16px;">{{item.address}}</p>
+              <p>
+                <span>{{item.workTypeName}} |</span>
+                <span> {{item.statusName}}</span>
+              </p>
+              <p>{{item.beginDate}}入场</p>
+            </div>
+          </div>
+          <!-- <p>{{item.workTypeName}}</p>
           <p>{{item.beginDate}}</p>
-          <p>{{item.statusName}}</p>
+          <p>{{item.statusName}}</p> -->
           <i-icon v-if="item.status == 1" @click="selectedItem = item; actionVisible = true" slot="footer" type="other"
             size="28" color="#80848f" />
         </i-cell>
@@ -23,7 +34,6 @@
       <view>删除后无法恢复哦</view>
     </i-modal>
     <i-message id="message" />
-    <!-- <VueTabBar></VueTabBar> -->
   </div>
 </template>
 
@@ -35,6 +45,11 @@
   export default {
     data() {
       return {
+        searchData: {
+          currentPage: 1,
+          pageSize: 10000,
+          status: ''
+        },
         deleteVisible: false,
         actionVisible: false,
         selectedItem: {},
@@ -76,7 +91,7 @@
           ids: [this.selectedItem.workId]
         }).then(res => {
           if (res.success) {
-            this.getAdderssList()
+            this.getAdderssList(this.searchData)
             this.deleteVisible = false
             this.actionVisible = false
             $Message({
@@ -124,13 +139,13 @@
             break
         }
       },
-      getAdderssList() {
-        this.$http.post('/work/address/list', {
-          currentPage: 1,
-          pageSize: 10
-        }).then(res => {
+      getAdderssList(pamars) {
+        this.$http.post('/work/address/list', pamars).then(res => {
           if (res.success) {
             this.dataArr = res.info.list
+            this.dataArr.forEach(e => {
+              e.firstLetter = e.address.charAt(0)
+            });
           }
         })
       },
@@ -166,7 +181,13 @@
       }
     },
     onShow() {
-      this.getAdderssList()
+      var status = wx.getStorageSync("status")
+       this.searchData.status = status ? status : ''
+       console.log(11,status)
+      this.getAdderssList(this.searchData)
+    },
+    onHide(){
+      wx.removeStorageSync('status')
     }
   }
 </script>
@@ -174,4 +195,20 @@
 <style lang="stylus" scoped>
   @import '../../styles/common.styl'
 
+  .place {
+    display flex;
+    align-items center;
+
+    .placeHead {
+      font-size: 30px;
+      border: 1px solid #ddd;
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      border-radius: 50%;
+      margin-right: 20px;
+
+    }
+  }
 </style>

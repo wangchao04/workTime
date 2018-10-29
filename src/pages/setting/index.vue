@@ -18,20 +18,20 @@
       <p>{{userData.name}}</p>
     </div>
     <div class="tabbarWrap">
-      <i-badge count="23" overflow-count="100">
-        <p>
+      <i-badge :count="count1" overflow-count="100">
+        <p @click="toSwitchTab(1)">
           <i-icon type="activity" size="28" color="#F4A900" />
           <span>开工中</span>
         </p>
       </i-badge>
-      <i-badge count="23" overflow-count="100">
-        <p>
+      <i-badge :count="count2" overflow-count="100">
+        <p @click="toSwitchTab(2)">
           <i-icon type="activity" size="28" color="#F4A900" />
           <span>结账中</span>
         </p>
       </i-badge>
-      <i-badge count="23" overflow-count="100">
-        <p>
+      <i-badge :count="count3" overflow-count="100">
+        <p @click="toSwitchTab(3)">
           <i-icon type="activity" size="28" color="#F4A900" />
           <span>已完工</span>
         </p>
@@ -51,6 +51,9 @@
   export default {
     data() {
       return {
+        count1:'',
+        count2:'',
+        count3:'',
         userData: {
           profile: '',
           name: '',
@@ -72,13 +75,29 @@
           },
         })
       },
+      toSwitchTab(pamars) {
+        wx.setStorageSync("status",pamars)
+        wx.switchTab({
+          url: `/pages/workPlace/main`,
+          success: function (res) {
+            
+            console.log("success")
+          },
+        })
+      },
       handleChange() {
 
+      },
+      getWorkPlaceStatus(){
+         this.$http.post(`/user/countWorkStatus`,{}).then(res => {
+           [this.count1,this.count2,this.count3] = [res.info[0].number,res.info[1].number,res.info[2].number]
+        })
       }
     },
     onShow() {
       this.userData.profile = wx.getStorageSync("avatarUrl")
       this.userData.name = wx.getStorageSync("nickName")
+      this.getWorkPlaceStatus()
     },
 
     mounted() {

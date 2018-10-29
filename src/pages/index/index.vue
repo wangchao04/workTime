@@ -15,8 +15,8 @@
         <div class="selectPlace">
           <span>请选择工地:</span>
           <div>
-            <picker :disabled="placeList.length == 0" style="overflow:hidden;" slot="footer" range-key="address" :range="placeList" :value="placeIndex"
-              @change="bindWorkerChange">
+            <picker :disabled="placeList.length == 0" style="overflow:hidden;" slot="footer" range-key="address" :range="placeList"
+              :value="placeIndex" @change="bindWorkerChange">
               {{placeList[placeIndex] ? placeList[placeIndex].address :'暂无'}}
             </picker>
             <i-icon v-if="placeList.length > 0" type="enter" size="28" color="#F4A900" />
@@ -47,21 +47,21 @@
             </radio-group>
           </p>
           <p style="text-align:center;display:flex;margin-top:20px;" v-if="placeData.payrollSystem == 1">
-            <picker mode="selector" @change="timeHourSelect">
-              <input :disabled="true" placeholder="请选择小时" :value="remarkTime.workHour" />
+            <picker :value="hourIndex" :range="hourArr" mode="selector" @change="timeHourSelect">
+              <input :disabled="true" placeholder="请选择小时" :value="remarkTime.hr" />
             </picker>
-            <picker mode="selector" @change="timeMinSelect">
-              <input :disabled="true" placeholder="请选择分钟" :value="remarkTime.workMin" />
+            <picker :value="minIndex" :range="minArr" mode="selector" @change="timeMinSelect">
+              <input :disabled="true" placeholder="请选择分钟" :value="remarkTime.mi" />
             </picker>
           </p>
           <p style="margin-top:20px;">
-            <button class="sureBtn">确认</button>
+            <button class="sureBtn" @click="sureRemarkTime">确认</button>
           </p>
           <!-- <p>工作天数</p> -->
         </div>
       </div>
     </i-drawer>
-
+    <i-message id="message" />
   </div>
 </template>
 
@@ -72,10 +72,16 @@
   import {
     formatTime
   } from '../../utils/index.js'
-
+  const {
+    $Message
+  } = require('../../../static/iview/base/index.js');
   export default {
     data() {
       return {
+        hourIndex: 0,
+        minIndex: 0,
+        hourArr: [],
+        minArr: [],
         radioArray: [{
             code: 1,
             name: '1天'
@@ -88,7 +94,10 @@
         placeIndex: 0,
         remarkTime: {
           workId: '',
-          hour: ''
+          hour: '',
+          hr: '',
+          mi: '',
+          workTime: ''
         },
         placeData: {},
         placeList: [],
@@ -109,6 +118,32 @@
       VueTabBar
     },
     methods: {
+      sureRemarkTime() {
+        this.$http.post(`/work/log/save`, this.remarkTime).then(res => {
+          if (res.success) {
+            // for (let i in this.remarkTime) {
+            //   this.remarkTime[i] = ''
+            // }
+            $Message({
+              content: '记工成功',
+              // type: 'warning'
+            });
+
+            this.showDrawer = false
+          } else {
+            $Message({
+              content: res.message,
+              type: 'warning'
+            });
+          }
+        })
+      },
+      timeHourSelect(data) {
+        this.remarkTime.hr = data.target.value
+      },
+      timeMinSelect(data) {
+        this.remarkTime.mi = data.target.value
+      },
       handleFruitChange(data) {
         this.placeData.hour = data.target.value
       },
@@ -137,8 +172,11 @@
       },
       select(val) {
         this.selectData = val[0] + '-' + val[1] + '-' + val[2]
-        this.showDrawer = true
-        console.log(val)
+        this.remarkTime.workTime = this.selectData
+        var date = new Date(this.selectData);
+        var allTime = date.getTime();
+        var nowTime = new Date().getTime()
+        this.showDrawer = allTime <= nowTime
       },
       toPage(to) {
         wx.navigateTo({
@@ -187,6 +225,7 @@
       console.log('PullDownRefresh');
     },
     onShow() {
+      this.showDrawer = false
       var _this = this
       // 查看是否授权
       wx.getSetting({
@@ -227,7 +266,14 @@
 
     },
     mounted() {
-
+      this.hourArr = []
+      this.minArr = []
+      for (let i = 0; i < 24; i++) {
+        this.hourArr.push(i)
+      }
+      for (let j = 0; j < 60; j++) {
+        this.minArr.push(j)
+      }
     }
   }
 </script>
@@ -311,7 +357,8 @@
     text-align: center;
     font-size 13px color $theme
   }
-  .sureBtn{
+
+  .sureBtn {
     background $theme;
   }
 </style>

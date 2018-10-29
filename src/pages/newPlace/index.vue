@@ -11,7 +11,7 @@
         </i-cell>
         <i-cell title="工作地点(必填):">
           <div style="display:flex" slot="footer" v-if="isFromAdd || placeData.status == 1">
-            <input placeholder="请填写工作地点"  v-model="placeData.address" :disabled="false" />
+            <input placeholder="请填写工作地点" v-model="placeData.address" :disabled="false" />
             <!-- <i-icon @click="selectAddress"  type="coordinates" size="28" color="#80848f" /> -->
           </div>
           <span slot="footer" v-else>{{placeData.address}}</span>
@@ -90,7 +90,7 @@
 
     },
     methods: {
-      selectAddress(){
+      selectAddress() {
         this.getLocation()
       },
       getLocation() {
@@ -99,7 +99,7 @@
           success: function (res) {
             _this.placeData.address = res.name
           },
-          fail:function(res){
+          fail: function (res) {
             console.log(res)
           }
         })
@@ -173,8 +173,10 @@
         for (let i in this.placeData) {
           this.placeData[i] = null
         }
+        this.workIndex = -1
+        this.timeIndex = -1
       }
-      
+
     },
     mounted() {
 
@@ -190,6 +192,7 @@
 
 <style lang="stylus" scoped>
   @import '../../styles/common.styl';
+
   .bottom-btn {
     position absolute bottom 0 width 100%
   }
@@ -197,7 +200,8 @@
   .newPlace {
     input {}
   }
-     .btn {
+
+  .btn {
     width: 100%;
     position: fixed;
     bottom: 5px;

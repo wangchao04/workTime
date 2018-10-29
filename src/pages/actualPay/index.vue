@@ -62,7 +62,7 @@
               this.actualData[i] = null
             }
             wx.switchTab({
-              url: `/pages/shouldPay/main`,
+              url: `/pages/workPlace/main`,
               success: function (res) {
                 $Message({
                   content: '保存成功',
