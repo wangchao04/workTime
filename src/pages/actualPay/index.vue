@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="">
+  <div class="font">
+    <div>
       <i-cell-group>
         <i-cell title="支付人姓名:">
           <input slot="footer" v-model="actualData.payName" />
@@ -39,7 +39,7 @@
           paidDate: '',
           remark: '',
           workId: '',
-          receivablesId:''
+          receivablesId: ''
         },
       }
     },
@@ -55,12 +55,15 @@
           });
           return
         }
-
+        wx.showLoading({
+          mask: true
+        })
         this.$http.post('/official/receipts/save', this.actualData).then(res => {
           if (res.success) {
             for (let i in this.actualData) {
               this.actualData[i] = null
             }
+            wx.hideLoading()
             wx.switchTab({
               url: `/pages/workPlace/main`,
               success: function (res) {
@@ -94,10 +97,12 @@
 
 <style lang="stylus" scoped>
   @import '../../styles/common.styl';
+
   .bottom-btn {
     position absolute bottom 0 width 100%
   }
-     .btn {
+
+  .btn {
     width: 100%;
     position: fixed;
     bottom: 5px;

@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "工地",
+  "navigationBarTitleText": "新建工地",
   "usingComponents": {
     "i-button": "../../../static/iview/button/index",
     "i-tab-bar": "../../../static/iview/tab-bar/index",

@@ -1,17 +1,22 @@
 <template>
-  <div class="background">
-    <div class="textarea">
-      <textarea style="width:100%;" v-model="suggestion" auto-focus />
-      </div>
+  <div class="background font">
+    <form @submit="newSuggestion" report-submit="true">
+      <div class="textarea">
+        <textarea style="width:100%;" v-model="suggestion" auto-focus />
+        </div>
     <div class="btn">
-      <button @click="newSuggestion">保存</button>
+      <button formType="submit">保存</button>
     </div>
+    </form>
+     <i-message id="message" />
   </div>
 </template>
 
 <script>
   import VueTabBar from '../../components/tabBar/tabBar.vue'
-
+  const {
+    $Message
+  } = require('../../../static/iview/base/index.js');
   export default {
     data() {
       return {
@@ -25,22 +30,43 @@
 
     methods: {
       toPage(to) {
-        wx.navigateTo({
-          url: `/pages/${to}/main`,
-          success: function (res) {
-            console.log("success")
-          },
-        })
+        // wx.redirectTo({
+        //   url: `/pages/${to}/main`,
+        //   success: function (res) {
+        //     console.log("success")
+        //   },
+        // })
+        wx.navigateBack({
+    delta: 1
+})
       },
-      newSuggestion() {
+      newSuggestion(e) {
+ wx.showLoading({
+          mask: true
+        })
         this.$http.post(`/feedback/save`, {
-          content:this.suggestion
+          content:this.suggestion,
+          formId:e.mp.detail.formId
         }).then(res => {
-         
+         if(res.success){
+             wx.hideLoading()
+           this.toPage('suggestion')
+            $Message({
+                  content: '保存成功',
+                  // type: 'warning'
+                });
+         }else {
+            $Message({
+              content: res.message,
+              type: 'warning'
+            });
+          }
         })
       }
     },
-    onShow() {},
+    onShow() {
+      this.suggestion = ''
+    },
 
     mounted() {
 
@@ -58,6 +84,9 @@
   padding:2px;
   width:94%;
   margin:0 auto;
+  position:relative;
+  top:10px;
+
 
   }
      .btn {

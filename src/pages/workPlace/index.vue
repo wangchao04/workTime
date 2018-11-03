@@ -1,5 +1,5 @@
 <template>
-  <div class="background">
+  <div class="background font">
     <div v-if="dataArr.length == 0" class="noContant">
       暂无工地
     </div>
@@ -16,6 +16,9 @@
               </p>
               <p>{{item.beginDate}}入场</p>
             </div>
+                    <div class="box">
+          <div class="text">{{item.statusName}}</div>
+        </div>
           </div>
           <!-- <p>{{item.workTypeName}}</p>
           <p>{{item.beginDate}}</p>
@@ -140,8 +143,12 @@
         }
       },
       getAdderssList(pamars) {
+          wx.showLoading({
+          mask: true
+        })
         this.$http.post('/work/address/list', pamars).then(res => {
           if (res.success) {
+             wx.hideLoading()
             this.dataArr = res.info.list
             this.dataArr.forEach(e => {
               e.firstLetter = e.address.charAt(0)
@@ -183,7 +190,6 @@
     onShow() {
       var status = wx.getStorageSync("status")
        this.searchData.status = status ? status : ''
-       console.log(11,status)
       this.getAdderssList(this.searchData)
     },
     onHide(){
@@ -209,6 +215,29 @@
       border-radius: 50%;
       margin-right: 20px;
 
+    }
+        .box {
+      width: 160rpx;
+      height: 160rpx;
+      background-color: $theme;
+      color: #fff;
+      transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      -moz-transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+      -o-transform: rotate(45deg);
+      position: absolute;
+      right: -100rpx;
+      top: -100rpx;
+      text-align: center;
+
+    }
+
+    .text {
+      position: absolute;
+      bottom: 0;
+      font-size 10px;
+      left:25px;
     }
   }
 </style>

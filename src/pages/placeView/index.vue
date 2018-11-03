@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="font">
     <div class="head">
       <span class="placeHead">{{firstLetter}}</span>
       <span style="flex:1;">{{placeData.address}}</span>

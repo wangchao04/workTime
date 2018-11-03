@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="font">
     <div class="calendarWrap">
       <Calendar arrowLeft="/static/images/left.png" arrowRight="/static/images/right.png" :events="events" :clean="true"
         @prev="selectMounth" @next="selectMounth" @select="select" ref="calendar" />
@@ -9,7 +9,7 @@
       <button @click="toPage('newPlace')">创建工地</button>
     </div>
 
-    <i-drawer mode="bottom" :visible="showDrawer" @close="showDrawer = false">
+    <i-drawer mode="bottom" :visible="showDrawer" @close="close">
       <div class="demo-container">
         <p style="text-align:center;">{{selectData}}</p>
         <div class="selectPlace">
@@ -35,8 +35,8 @@
         <div v-if="placeList.length > 0" class="placeCont">
           <p class="placeTitle">
             <span>{{placeData.payrollSystemName}}</span>
-            <span v-if="placeData.payrollSystem == 1">{{placeData.fee}}/小时</span>
-            <span v-if="placeData.payrollSystem == 2">{{placeData.fee}}/天</span>
+            <span v-if="placeData.payrollSystem == 1">{{placeData.fee}}元/小时</span>
+            <span v-if="placeData.payrollSystem == 2">{{placeData.fee}}元/天</span>
           </p>
           <p style="text-align:center;" v-if="placeData.payrollSystem == 3">包工制无需记工</p>
           <p style="text-align:center;" v-if="placeData.payrollSystem == 2">
@@ -48,13 +48,13 @@
           </p>
           <p style="text-align:center;display:flex;margin-top:20px;" v-if="placeData.payrollSystem == 1">
             <picker :value="hourIndex" :range="hourArr" mode="selector" @change="timeHourSelect">
-              <input :disabled="true" placeholder="请选择小时" :value="remarkTime.hr" />
+              <input :disabled="true" placeholder="请选择小时" :value="remarkTime.hr" />小时
             </picker>
             <picker :value="minIndex" :range="minArr" mode="selector" @change="timeMinSelect">
-              <input :disabled="true" placeholder="请选择分钟" :value="remarkTime.mi" />
+              <input :disabled="true" placeholder="请选择分钟" :value="remarkTime.mi" />分钟
             </picker>
           </p>
-          <p style="margin-top:20px;">
+          <p v-if="placeData.payrollSystem != 3" style="margin-top:20px;">
             <button class="sureBtn" @click="sureRemarkTime">确认</button>
           </p>
           <!-- <p>工作天数</p> -->
@@ -118,18 +118,20 @@
       VueTabBar
     },
     methods: {
+      close() {
+        this.showDrawer = false
+        for (let i in this.remarkTime) {
+          this.remarkTime[i] = ''
+        }
+      },
       sureRemarkTime() {
+        this.close()
         this.$http.post(`/work/log/save`, this.remarkTime).then(res => {
           if (res.success) {
-            // for (let i in this.remarkTime) {
-            //   this.remarkTime[i] = ''
-            // }
             $Message({
               content: '记工成功',
               // type: 'warning'
             });
-
-            this.showDrawer = false
           } else {
             $Message({
               content: res.message,
@@ -176,6 +178,7 @@
         var date = new Date(this.selectData);
         var allTime = date.getTime();
         var nowTime = new Date().getTime()
+        console.log(allTime, nowTime)
         this.showDrawer = allTime <= nowTime
       },
       toPage(to) {
@@ -196,7 +199,7 @@
         })
       },
       getPlaceList() {
-        this.$http.post('/work/address/getSelectAddress/').then(res => {
+        this.$http.post('/work/address/getSelectAddress/', {}).then(res => {
           this.placeList = res.info
           this.remarkTime.workId = res.info[0].id
           this.getPlaceById(this.remarkTime.workId)
@@ -303,6 +306,7 @@
     border-bottom: 1px solid #ddd;
     padding-bottom 5px;
     display: flex;
+    align-items: center;
 
     &>span {
       flex: 1;
@@ -312,6 +316,7 @@
       display: flex;
       white-space: nowrap;
       overflow: hidden;
+      align-items: center;
 
     }
 
@@ -360,5 +365,6 @@
 
   .sureBtn {
     background $theme;
+    color: #fff;
   }
 </style>

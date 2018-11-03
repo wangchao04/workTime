@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="font">
     <!-- <div>
       <i-card title="唐哲" thumb="https://i.loli.net/2017/08/21/599a521472424.jpg">
         <view slot="content">手机号:13334567890</view>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="font">
     <div class="newPlace">
       <i-cell-group>
         <i-cell title="计时制(必填):">
@@ -128,9 +128,12 @@
           });
           return
         }
-
+ wx.showLoading({
+          mask: true
+        })
         this.$http.post('/work/address/save', this.placeData).then(res => {
           if (res.success) {
+             wx.hideLoading()
             wx.switchTab({
               url: `/pages/workPlace/main`,
               success: function (res) {

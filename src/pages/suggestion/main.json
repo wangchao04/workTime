@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "设置",
+  "navigationBarTitleText": "反馈",
   "usingComponents": {
     "i-button": "../../../static/iview/button/index",
     "i-tab-bar": "../../../static/iview/tab-bar/index",

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="font">
     <i-cell-group>
       <i-cell title="当前工地:">
         <input slot="footer" v-model="palceName" :disabled="true" />
@@ -74,11 +74,15 @@
         })
       },
       save() {
+        wx.showLoading({
+          mask: true
+        })
         this.$http.post(`/work/log/save`, this.placeData).then(res => {
           if (res.success) {
             for (let i in this.placeData) {
               this.placeData[i] = ''
             }
+            wx.hideLoading()
             wx.switchTab({
               url: `/pages/workPlace/main`,
               success: function (res) {
@@ -115,8 +119,8 @@
 
 <style lang="stylus" scoped>
   @import '../../styles/common.styl';
+
   .bottom-btn {
     position absolute bottom 0 width 100%
   }
-  
 </style>
